@@ -1,22 +1,19 @@
 from django.http import HttpResponse
 from django.shortcuts import render
+from .models import Post
 
-posts = [
-    {
-        'author': 'CoreyMS',
-        'title': 'Blog Post 1',
-        'content': 'First post content',
-        'date_posted': 'August 27, 2018'
-    },
-    {
-        'author': 'Jane Doe',
-        'title': 'Blog Post 2',
-        'content': 'Second post content',
-        'date_posted': 'August 28, 2018'
-    }
-]
-# Create your views here.
 def home(request):
+    posts=Post.objects.all()
+    if not posts.exists():
+        posts=[{
+            'title':'No Posts',
+            'content':'No posts available',
+            'date':'',
+            'author':''
+        }]
+
+    
+
     return render(request,"home.html",{'posts':posts})
 
 def about(request):
