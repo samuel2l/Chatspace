@@ -9,3 +9,4 @@ class Post(models.Model):
     date=models.DateTimeField(default=timezone.now)
     author=models.ForeignKey(User,on_delete=models.CASCADE)
 
+
