@@ -9,4 +9,4 @@ class Profile(models.Model):
     dp=models.ImageField(default='default.jpg',upload_to='dps')
 
     def __str__(self):
-        return f'{self.user.username} P'
+        return f"{self.user.username}'s Profile"
