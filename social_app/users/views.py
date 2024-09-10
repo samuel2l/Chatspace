@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect
 from django.contrib import messages
 from .forms import SignUpForm
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 def signup(request):
@@ -18,3 +19,7 @@ def signup(request):
         form=SignUpForm()
 
     return render(request,'signup.html',{'form':form})
+
+@login_required
+def profile(request):
+    return render(request,'profile.html')
