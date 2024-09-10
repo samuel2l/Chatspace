@@ -24,33 +24,34 @@ def signup(request):
 def profile(request):
     return render(request,'profile.html')
 
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.shortcuts import redirect, render
+from .forms import UpdateProfileForm, UpdateUserForm
+
 @login_required
 def update_profile(request):
-    update_profile_form=UpdateProfileForm()
-    update_user_form=UpdateUserForm()
-    
-    if request.method=='POST':
+    # Initializing forms with the current user data
+    update_user_form = UpdateUserForm(instance=request.user)
+    update_profile_form = UpdateProfileForm(instance=request.user.profile)
 
-        update_user_form=UpdateUserForm(request.POST, instance=request.user)
-        update_profile_form = UpdateProfileForm(request.POST,
-                                    request.FILES,
-                                    instance=request.user.profile)
-    
-        
-        if update_profile_form.is_valid() and update_user_form.is_valid():
-            update_user_form.save()
-            update_profile_form.save()
-            messages.success(request,f'Update successful')
+    if request.method == 'POST':
+        update_user_form = UpdateUserForm(request.POST, instance=request.user)
+        update_profile_form = UpdateProfileForm(request.POST, request.FILES, instance=request.user.profile)
 
+        if update_user_form.is_valid() and update_profile_form.is_valid():
+            # Check for changes before saving
+            if update_user_form.has_changed():
+                update_user_form.save()
+            if update_profile_form.has_changed():
+                update_profile_form.save()
+                
+            messages.success(request, 'Update successful')
             return redirect('profile')
-    
-        else:
-            update_user_form = UpdateUserForm(instance=request.user)
-            update_profile_form = UpdateProfileForm(instance=request.user.profile)
 
-    context = {
+    
+
+    return render(request, 'update_profile.html', {
         'update_user_form': update_user_form,
         'update_profile_form': update_profile_form
-    }
-
-    return render(request, 'update_profile.html', context)
+    })
