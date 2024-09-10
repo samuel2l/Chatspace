@@ -9,8 +9,9 @@
         {% if object.author == user %}
           <div>
             <!-- the obj id passed in the href is the pk that that the route takes as a param -->
-            <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'post-update' object.id %}">Update</a>
-            <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'post-delete' object.id %}">Delete</a>
+            
+            <a class="btn btn-secondary btn-sm mt-1 mb-1" href="#">Update</a>
+            <a class="btn btn-danger btn-sm mt-1 mb-1" href="#">Delete</a>
           </div>
         {% endif %}
       </div>
