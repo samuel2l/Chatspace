@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
-    <div class="content-section ">
+
+<div class="content-section ">
+
       <div class="media">
         <!-- Make the image round with fixed dimensions -->
         <img class="rounded-circle account-img" 
@@ -9,6 +11,7 @@
              style="width: 100px; height: 100px; object-fit: cover;">
         <div class="media-body ml-3">
           <h2 class="account-heading">{{ user.username }}</h2>
+
           <p class="text-secondary">{{ user.email }}</p>
         </div>
       </div>
