@@ -1,7 +1,8 @@
 
 from django.shortcuts import render
 from .models import Post
-from django.views.generic import ListView,DetailView,CreateView
+from django.views.generic import ListView,DetailView,CreateView,UpdateView,DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin,UserPassesTestMixin
 def home(request):
     posts=Post.objects.all()
     if not posts.exists():
@@ -25,7 +26,7 @@ class PostDetailsView(DetailView):
     template_name='post_details.html'
 #if you do not specify a template name it means your template  should follow the convention: template/appname/model_viewtype.html
 
-class CreatePostView(CreateView):
+class CreatePostView(LoginRequiredMixin,CreateView):
     model=Post
     fields=['title','content']
     template_name='create_post.html'
@@ -40,6 +41,30 @@ class CreatePostView(CreateView):
         return super().form_valid(form)
 #the create view expects its context to be called form
 
+class UpdatePostView(LoginRequiredMixin,UserPassesTestMixin,UpdateView):
+    model=Post
+    fields=['title','content']
+    template_name='create_post.html'
+    def form_valid(self,form):
+        form.instance.author=self.request.user
+        return super().form_valid(form)
 
+    def test_func(self):
+        post=self.get_object()
+        if self.request.user==post.author:
+            return True
+        return False
+    
+class DeletePostView(LoginRequiredMixin,UserPassesTestMixin,DeleteView):
+    model=Post
+    template_name='confirm_delete.html'
+    success_url='/'
+
+    def test_func(self):
+        post=self.get_object()
+        if self.request.user==post.author:
+            return True
+        return False
+    
 def about(request):
     return render(request,"about.html")
